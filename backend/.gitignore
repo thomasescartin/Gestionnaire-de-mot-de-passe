@@ -12,7 +12,7 @@ Thumbs.db
 backend/.env
 backend/db.sql
 .env
-.db.sql
+db.sql
 
 
 
