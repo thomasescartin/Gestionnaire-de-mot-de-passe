@@ -11,6 +11,9 @@ Thumbs.db
 # Ignorer les fichiers d'environnement
 backend/.env
 backend/db.sql
+.env
+.db.sql
+
 
 
 # Ignorer les fichiers compilés
