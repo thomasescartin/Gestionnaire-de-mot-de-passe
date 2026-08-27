@@ -1,0 +1,19 @@
+# Ignorer les fichiers logs
+*.log
+
+# Ignorer un dossier
+node_modules/
+
+# Ignorer les fichiers système
+.DS_Store
+Thumbs.db
+
+# Ignorer les fichiers d'environnement
+backend/.env
+backend/db.sql
+
+
+# Ignorer les fichiers compilés
+*.class
+*.o
+*.pyc
