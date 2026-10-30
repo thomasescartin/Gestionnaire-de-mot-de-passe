@@ -17,7 +17,7 @@ npm create vite@latest
 ### 3.Installer les dépendances
 
 ```bash
-npm install express msql2 dotenv jsonwebtoken argon2 express-rate-limit
+npm install express msql2 dotenv jsonwebtoken argon2 express-rate-limit nodemon
 ```
 
 ## Technologie utilisées
