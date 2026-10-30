@@ -15,4 +15,10 @@ module.exports = {
                 ON DELETE CASCADE
             )`);
   },
+
+  down: async (db) => {
+    await db.query(`
+          DROP TABLE mdp 
+        `);
+  },
 };
