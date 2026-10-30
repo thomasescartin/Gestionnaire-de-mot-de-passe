@@ -14,7 +14,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node serveur.js",
-    "migrate": "node migration/migrate.js"
+    "migrate": "node migration/migrate.js",
+    "migrate:undo": "node migration/migrate-undo.js"
   },
   "keywords": [],
   "author": "",
