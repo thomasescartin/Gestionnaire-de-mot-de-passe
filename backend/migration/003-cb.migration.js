@@ -10,10 +10,10 @@ module.exports = {
             date_validated DATE NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME,
-            UNIQUE(last_name, first_name, CVV, date_vidated ),
-            id_users INT NOT NULL,
-            FOREIGN KEY (id_users) 
-                REFERENCES users(id_users)
+            UNIQUE(last_name, first_name, CVV, date_validated ),
+            id_user INT NOT NULL,
+            FOREIGN KEY (id_user) 
+                REFERENCES users(id_user)
                 ON DELETE CASCADE
             );
         `);

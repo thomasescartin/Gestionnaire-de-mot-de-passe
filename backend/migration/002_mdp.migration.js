@@ -9,9 +9,9 @@ module.exports = {
             mdp VARCHAR(255) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP;
             updated_at DATETIME,
-            id_users INT NOT NULL,
-            FOREIGN KEY (id_users) 
-                REFERENCES users (id_users)
+            id_user INT NOT NULL,
+            FOREIGN KEY (id_user) 
+                REFERENCES users (id_user)
                 ON DELETE CASCADE
             )`);
   },
