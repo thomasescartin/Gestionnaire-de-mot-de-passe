@@ -5,7 +5,7 @@ module.exports = {
             id_cb INT AUTO_INCREMENT PRIMARY KEY,
             last_name VARCHAR(255) NOT NULL,
             first_name VARCHAR(50) NOT NULL,
-            card_number TEXT(255) NOT NULL, 
+            card_number TEXT(255) NOT NULL,
             CVV VARCHAR(4) NOT NULL,
             date_validated DATE NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -25,3 +25,4 @@ module.exports = {
         `);
   },
 };
+// Pas de contrainte avec TEXT
