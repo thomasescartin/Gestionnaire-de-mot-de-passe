@@ -41,3 +41,5 @@ const cbModel = {
     return rows.affectedRows;
   },
 };
+
+module.exports = cbModel;
