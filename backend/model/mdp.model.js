@@ -13,7 +13,7 @@ const mdpModel = {
   //Trouver un mot de passe avec son id
   async findMDP({ id_mdp }) {
     const [rows] = await db.execute(
-      "SELECT id_mdp, site_name, url, user_name, mdp WHERE id_mdp = ?",
+      "SELECT id_mdp, site_name, url, user_name, mdp FROM mdp WHERE id_mdp = ?",
       [id_mdp]
     );
     return rows[0] || null;
