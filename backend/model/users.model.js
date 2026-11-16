@@ -29,10 +29,18 @@ const UserModel = {
   },
 
   //Modifier un utilisateur
-  async updateUser({ id_user, email, password_hash }) {
+  async updateEmail({ id_user, email }) {
     const [result] = await db.execute(
-      " UPDATE users set email = ?, password_hash = ? WHERE id_user = ?",
-      [id_user, email, password_hash]
+      " UPDATE users set email = ? WHERE id_user = ?",
+      [id_user, email]
+    );
+    return result.affectedRows;
+  },
+
+  async updatePassword({ id_user, password_hash }) {
+    const [result] = await db.execute(
+      " UPDATE users set password_hash = ? WHERE id_user = ?",
+      [id_user, password_hash]
     );
     return result.affectedRows;
   },
