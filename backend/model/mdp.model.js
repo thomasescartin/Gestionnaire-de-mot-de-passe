@@ -19,11 +19,20 @@ const mdpModel = {
     return rows[0] || null;
   },
 
-  //Modifier un mot de passe ou un nom d'utilisateur
-  async updateMDP({ id_mdp, user_name, mdp }) {
+  //Modifier un nom d'utilisateur
+  async updateMDPByName({ id_mdp, user_name }) {
     const [result] = await db.execute(
-      "UPDATE mdp SET user_name = ?, mdp = ? WHERE id_mdp = ?",
-      [id_mdp, user_name, mdp]
+      "UPDATE mdp SET user_name = ? WHERE id_mdp = ?",
+      [id_mdp, user_name]
+    );
+    return result.affectedRows;
+  },
+
+  //Modifier un mot de passe
+  async updateMDPByPassword({ id_mdp, mdp }) {
+    const [result] = await db.execute(
+      "UPDATE mdp SET mdp = ? WHERE id_mdp = ?",
+      [id_mdp, mdp]
     );
     return result.affectedRows;
   },
