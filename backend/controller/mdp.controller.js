@@ -88,3 +88,11 @@ const DeleteMDP = async (req, res) => {
     return res.status(500).json({ message: "Erruer serveur", error });
   }
 };
+
+module.exports = {
+  CreateMDP,
+  GetMDP,
+  UpgradeByUserName,
+  UpgradeMdp,
+  DeleteMDP,
+};
