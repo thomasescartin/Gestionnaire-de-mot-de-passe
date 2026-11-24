@@ -2,10 +2,10 @@ const db = require("../config/db.js");
 
 const UserModel = {
   //Créer un utilisateur
-  async createUser({ email, password_hash }) {
+  async createUser({ email, password_hashed }) {
     const [result] = await db.execute(
-      "INSERT INTO users (email, password_hash ) VALUES (?, ?)",
-      [email, password_hash]
+      "INSERT INTO users (email, password_hashed ) VALUES (?, ?)",
+      [email, password_hashed]
     );
     return result.insertId;
   },
@@ -13,7 +13,7 @@ const UserModel = {
   //Trouver un utilisateur avec son email
   async findByEmail(email) {
     const [rows] = await db.execute(
-      "SELECT id_user, email, password_hash FROM users WHERE email = ?",
+      "SELECT id_user, email, password_hashed FROM users WHERE email = ?",
       [email]
     );
     return rows[0] || null;
@@ -22,7 +22,7 @@ const UserModel = {
   //Trouver un utilisateur avec son id
   async findById(id_user) {
     const [rows] = await db.execute(
-      "SELECT id_user, email, password_hash FROM users WHERE id = ?",
+      "SELECT id_user, email, password_hashed FROM users WHERE id = ?",
       [id_user]
     );
     return rows[0] || null;
@@ -37,10 +37,10 @@ const UserModel = {
     return result.affectedRows;
   },
 
-  async updatePassword({ id_user, password_hash }) {
+  async updatePassword({ id_user, password_hashed }) {
     const [result] = await db.execute(
-      " UPDATE users set password_hash = ? WHERE id_user = ?",
-      [id_user, password_hash]
+      " UPDATE users set password_hashed = ? WHERE id_user = ?",
+      [id_user, password_hashed]
     );
     return result.affectedRows;
   },
