@@ -32,7 +32,7 @@ const UserModel = {
   async updateEmail({ id_user, email }) {
     const [result] = await db.execute(
       " UPDATE users set email = ? WHERE id_user = ?",
-      [id_user, email]
+      [email, id_user]
     );
     return result.affectedRows;
   },
