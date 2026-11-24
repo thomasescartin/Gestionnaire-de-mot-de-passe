@@ -5,14 +5,14 @@ const UserModel = require("../model/users.model");
 // Register
 const Register = async (req, res) => {
   try {
-    const { email, password_hash } = req.body;
+    const { email, password_hashed } = req.body;
     const existingUser = await UserModel.findByEmail(email);
     if (existingUser) {
       return res.status(400).json({ message: "Email déjà utilisé." });
     }
     const userid = await UserModel.createUser({
       email,
-      password_hash,
+      password_hashed,
     });
     return res.status(201).json({ message: "Utilisateur créé.", userid });
   } catch (error) {
@@ -57,12 +57,12 @@ const UpdateEmail = async (req, res) => {
 };
 
 //Upgrade password
-const UpgradePassword_hash = async (req, res) => {
+const UpgradePassword_hashed = async (req, res) => {
   try {
-    const { password_hash } = req.body;
+    const { password_hashed } = req.body;
     const upgrade = await UserModel.updatePassword(
       req.user.id_user,
-      password_hash
+      password_hashed
     );
     if (!upgrade) {
       return res.status(404).json({ message: "Utilisateur introuvable." });
@@ -90,6 +90,6 @@ module.exports = {
   Register,
   Login,
   UpdateEmail,
-  UpgradePassword_hash,
+  UpgradePassword_hashed,
   DeleteUser,
 };
