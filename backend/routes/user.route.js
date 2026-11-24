@@ -10,7 +10,7 @@ userRoute.post("/login", RouteUser.Login);
 //Route des utilisateurs
 // userRoute.get("/finduser");
 userRoute.put("/upgradeEmail", RouteUser.UpdateEmail);
-userRoute.put("/upgradePassword", RouteUser.UpgradePassword_hash);
+userRoute.put("/upgradePassword", RouteUser.UpgradePassword_hashed);
 userRoute.delete("/delete", RouteUser.DeleteUser);
 
 module.exports = { userRoute };
