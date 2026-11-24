@@ -46,7 +46,10 @@ const Login = async (req, res) => {
 const UpdateEmail = async (req, res) => {
   try {
     const { email } = req.body;
-    const upgrade = await UserModel.updateEmail(req.user.id_user, email);
+    const upgrade = await UserModel.updateEmail({
+      id_user: req.user.id_user,
+      email,
+    });
     if (!upgrade) {
       return res.status(404).json({ message: "Utilisateur non trouvé." });
     }
@@ -76,7 +79,7 @@ const UpgradePassword_hashed = async (req, res) => {
 //Delete user
 const DeleteUser = async (req, res) => {
   try {
-    const del = await UserModel.deleteUser(req.user.id_user);
+    const del = await UserModel.deleteUser({ id_user: req.user.id_user });
     if (!del) {
       return res.status(404).json({ message: "utilisateur non trouvé." });
     }
