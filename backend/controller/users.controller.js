@@ -1,91 +1,192 @@
 const jwt = require("jsonwebtoken");
 require("dotenv/config");
+
 const UserModel = require("../model/users.model");
 
-// Register
+// Inscription
 const Register = async (req, res) => {
   try {
-    const { email, password_hashed } = req.body;
-    const existingUser = await UserModel.findByEmail(email);
-    if (existingUser) {
-      return res.status(400).json({ message: "Email déjà utilisé." });
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email et mot de passe obligatoires.",
+      });
     }
-    const userid = await UserModel.createUser({
+
+    const existingUser = await UserModel.findByEmail(email);
+
+    if (existingUser) {
+      return res.status(409).json({
+        message: "Email déjà utilisé.",
+      });
+    }
+
+    // Le mot de passe doit être hashé côté serveur.
+    // Ici, on suppose que le middleware de hashage
+    // place le résultat dans req.body.password_hashed.
+    const { password_hashed } = req.body;
+
+    if (!password_hashed) {
+      return res.status(400).json({
+        message: "Mot de passe hashé manquant.",
+      });
+    }
+
+    const userId = await UserModel.createUser({
       email,
       password_hashed,
     });
-    return res.status(201).json({ message: "Utilisateur créé.", userid });
+
+    return res.status(201).json({
+      message: "Utilisateur créé.",
+      userId,
+    });
   } catch (error) {
-    return res.status(500).json({ message: "Erreur du serveur.", error });
+    console.error("Erreur Register :", error);
+
+    return res.status(500).json({
+      message: "Erreur interne du serveur.",
+    });
   }
 };
 
-//Login
+// Connexion
 const Login = async (req, res) => {
   try {
     const { email } = req.body;
+
     const user = await UserModel.findByEmail(email);
+
     if (!user) {
-      res.status(400).json({ message: "Utilisateur introuvable" });
+      return res.status(401).json({
+        message: "Identifiants incorrects.",
+      });
     }
+
+    // On suppose ici que le middleware de vérification
+    // du mot de passe a déjà validé les identifiants.
     const token = jwt.sign(
       {
-        id: user.id_user,
+        id_user: user.id_user,
         email: user.email,
       },
-      process.env.JWT,
-      process.env.JWT_EXPIRE_IN || "1h"
+      process.env.JWT_SECRET,
+      {
+        expiresIn: process.env.JWT_EXPIRE_IN || "1h",
+      }
     );
-    res.status(201).json({ token });
+
+    return res.status(200).json({ token });
   } catch (error) {
-    return res.status(500).json({ message: "Erreur du serveur", error });
+    console.error("Erreur Login :", error);
+
+    return res.status(500).json({
+      message: "Erreur interne du serveur.",
+    });
   }
 };
 
-//Update email
+// Modifier l'email
 const UpdateEmail = async (req, res) => {
   try {
     const { email } = req.body;
+    const id_user = req.user.id_user;
+
+    if (!email) {
+      return res.status(400).json({
+        message: "Nouvel email obligatoire.",
+      });
+    }
+
     const upgrade = await UserModel.updateEmail({
-      id_user: req.user.id_user,
+      id_user,
       email,
     });
+
     if (!upgrade) {
-      return res.status(404).json({ message: "Utilisateur non trouvé." });
+      return res.status(404).json({
+        message: "Utilisateur non trouvé.",
+      });
     }
-    return res.json({ message: "Email mis à jour" });
+
+    return res.status(200).json({
+      message: "Email mis à jour.",
+    });
   } catch (error) {
-    return res.status(500).json({ message: "Erreur serveur.", error });
+    console.error("Erreur UpdateEmail :", error);
+
+    if (error.code === "ER_DUP_ENTRY") {
+      return res.status(409).json({
+        message: "Cet email est déjà utilisé.",
+      });
+    }
+
+    return res.status(500).json({
+      message: "Erreur interne du serveur.",
+    });
   }
 };
 
-//Upgrade password
+// Modifier le mot de passe
 const UpgradePassword_hashed = async (req, res) => {
   try {
     const { password_hashed } = req.body;
-    const upgrade = await UserModel.updatePassword(
-      req.user.id_user,
-      password_hashed
-    );
-    if (!upgrade) {
-      return res.status(404).json({ message: "Utilisateur introuvable." });
+    const id_user = req.user.id_user;
+
+    if (!password_hashed) {
+      return res.status(400).json({
+        message: "Mot de passe manquant.",
+      });
     }
-    return res.status(201).json({ message: "Mot de passe mis à jour." });
+
+    const upgrade = await UserModel.updatePassword({
+      id_user,
+      password_hashed,
+    });
+
+    if (!upgrade) {
+      return res.status(404).json({
+        message: "Utilisateur non trouvé.",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Mot de passe mis à jour.",
+    });
   } catch (error) {
-    return res.status(500).json({ message: "Erreur serveur.", error });
+    console.error("Erreur UpgradePassword :", error);
+
+    return res.status(500).json({
+      message: "Erreur interne du serveur.",
+    });
   }
 };
 
-//Delete user
+// Supprimer le compte
 const DeleteUser = async (req, res) => {
   try {
-    const del = await UserModel.deleteUser({ id_user: req.user.id_user });
-    if (!del) {
-      return res.status(404).json({ message: "utilisateur non trouvé." });
+    const id_user = req.user.id_user;
+
+    const deleted = await UserModel.deleteUser({
+      id_user,
+    });
+
+    if (!deleted) {
+      return res.status(404).json({
+        message: "Utilisateur non trouvé.",
+      });
     }
-    return res.status(201).json({ message: "Utilisateur supprimé." });
+
+    return res.status(200).json({
+      message: "Utilisateur supprimé.",
+    });
   } catch (error) {
-    return res.status(500).json({ message: "Erreur serveur", error });
+    console.error("Erreur DeleteUser :", error);
+
+    return res.status(500).json({
+      message: "Erreur interne du serveur.",
+    });
   }
 };
 
